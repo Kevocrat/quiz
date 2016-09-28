@@ -37,8 +37,8 @@ public class QuizController {
 
     //posta svaren
     @RequestMapping("/result")
-    public ModelAndView postAndContinue(@RequestParam String test) {
-        System.out.println(test);
+    public ModelAndView postAndContinue(@RequestParam String Value ) {
+        System.out.println(Value);
         return new ModelAndView("/Results");
     }
 

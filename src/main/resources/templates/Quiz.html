@@ -7,15 +7,14 @@
 <body>
 
 <span th:text="${Question}"></span>
+<form action="result" method="post">
 
 <u1>
     <li th:each="choice : ${choices}">
-<form action="">
-    <input type="radio" name="Coolio" th:value="1" th:text="${choice}"/>
-</form>
+    <input type="radio" name="Coolio" th:value="placeholder" th:text="${choice}"/>
     </li>
 </u1>
 
-<form action="result" method="post"><input type="text" name="test"/><input type="submit"/></form>
+<input type="submit"/></form>
 </body>
 </html>
