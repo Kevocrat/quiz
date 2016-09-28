@@ -84,7 +84,7 @@ public class QuizRepository implements Repository {
     }
 
     private Choice rsChoice(ResultSet rs) throws SQLException {
-        return new Choice(rs.getInt("Question_ID"), rs.getLong("ChoiceID"), rs.getString("Choices"), rs.getString("Desc"));
+        return new Choice(rs.getInt("Question_ID"), rs.getInt("ChoiceID"), rs.getString("Choices"), rs.getString("Desc"));
     }
 
     private Question rsQuestion(ResultSet rs) throws SQLException {
