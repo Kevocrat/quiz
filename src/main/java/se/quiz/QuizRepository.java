@@ -74,6 +74,7 @@ public class QuizRepository implements Repository {
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT QuestionID, Questions FROM [Questions]")) {
+
             List<Question> questions = new ArrayList<>();
             while (rs.next()) questions.add(rsQuestion(rs));
             return questions;
@@ -83,19 +84,19 @@ public class QuizRepository implements Repository {
     }
 
     private Choice rsChoice(ResultSet rs) throws SQLException {
-        return new Choice(rs.getLong("Question_ID"), rs.getLong("ChoiceID"), rs.getString("Choices"), rs.getString("Desc"));
+        return new Choice(rs.getInt("Question_ID"), rs.getLong("ChoiceID"), rs.getString("Choices"), rs.getString("Desc"));
     }
 
     private Question rsQuestion(ResultSet rs) throws SQLException {
-        return new Question(rs.getLong("QuestionID"), rs.getString("Questions"));
+        return new Question(rs.getInt("QuestionID"), rs.getString("Questions"));
     }
 
     private Quiz rsQuiz(ResultSet rs) throws SQLException {
-        return new Quiz(rs.getLong("QuizID"), rs.getString("Title"), rs.getString("Desc"));
+        return new Quiz(rs.getInt("QuizID"), rs.getString("Title"), rs.getString("Desc"));
     }
 
     private Answer rsAnswer(ResultSet rs) throws SQLException {
-        return new Answer(rs.getLong("AnswersID"), rs.getString("Answers"));
+        return new Answer(rs.getInt("AnswersID"), rs.getString("Answers"));
     }
 
 
