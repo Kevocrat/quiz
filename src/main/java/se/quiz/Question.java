@@ -5,12 +5,11 @@ package se.quiz;
  */
 public class Question {
 
-    public final long questionID;
-    public final String question;
+    private long questionID;
+    private String question;
 
     public Question(long questionID, String question){
         this.questionID=questionID;
         this.question=question;
     }
-
 }
