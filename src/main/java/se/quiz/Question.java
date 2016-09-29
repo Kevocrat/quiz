@@ -5,6 +5,7 @@ package se.quiz;
  */
 public class Question {
 
+<<<<<<< HEAD
     public final long questionID;
     public final String question;
 
@@ -13,4 +14,13 @@ public class Question {
         this.question=question;
     }
 
+=======
+    public int questionID;
+    public String question;
+
+    public Question(int questionID, String question){
+        this.questionID=questionID;
+        this.question=question;
+    }
+>>>>>>> upstream/master
 }
