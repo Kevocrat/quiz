@@ -13,18 +13,10 @@ import java.util.List;
  */
 @Component
 public class QuizRepository implements Repository {
-<<<<<<< HEAD
-    @Autowired
-    private DataSource dataSource;
-
-    public List<Question> listQuestions() throws SQLException {
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT QuestionID, Questions FROM [Questions]")) {
-=======
 
     @Autowired
     private DataSource dataSource;
+
 
     public List<Choice> getChoicesForQuestion(long question_ID) {
         try (Connection conn = dataSource.getConnection();
@@ -42,7 +34,7 @@ public class QuizRepository implements Repository {
 
     public Question getQuestion(long questionID) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT QuestionID, Questions FROM [Question] WHERE QuestionID = ?")) {
+             PreparedStatement ps = conn.prepareStatement("SELECT QuestionID, Questions FROM [Questions] WHERE QuestionID = ?")) {
             ps.setLong(1, questionID);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) throw new SQLException();
@@ -53,10 +45,9 @@ public class QuizRepository implements Repository {
         }
     }
 
-    public Quiz getQuiz(long quizID) {
+    public Quiz getQuiz() {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT QuizID, Title, Desc FROM [Quiz] WHERE QuizID = ?")) {
-            ps.setLong(1, quizID);
+             PreparedStatement ps = conn.prepareStatement("SELECT TOP 1 QuizID, Title, [Desc] FROM [Quiz] ORDER BY [CreatedDate] DESC")) {
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) throw new SQLException();
                 else return rsQuiz(rs);
@@ -79,58 +70,25 @@ public class QuizRepository implements Repository {
         }
     }
 
-    public List<Question> listQuestions() {
+    public List<Integer> listQuestionID(int Quiz_ID) throws SQLException {
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT QuestionID, Questions FROM [Questions]")) {
+             PreparedStatement ps = conn.prepareStatement("SELECT QuestionID FROM [Questions] WHERE Quiz_ID = ?")) {
+            ps.setInt(1, Quiz_ID);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Integer> questions = new ArrayList<>();
+                if (!rs.next()) throw new SQLException();
+                else
+                    while (rs.next()) questions.add(rs.getInt("QuestionID"));
+                return questions;
+            }
 
->>>>>>> upstream/master
-            List<Question> questions = new ArrayList<>();
-            while (rs.next()) questions.add(rsQuestion(rs));
-            return questions;
         } catch (SQLException e) {
-<<<<<<< HEAD
+
             throw new SQLException(e);
         }
     }
 
-//    public Question getQuestion(int questionID) throws SQLException {
-//        try (Connection conn = dataSource.getConnection();
-//             PreparedStatement ps = conn.prepareStatement("SELECT QuestionID, Questions FROM [Question] WHERE QuestionID = ?")) {
-//            ps.setLong(1, questionID);
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (!rs.next()) throw new SQLException();
-//                else return rsQuestion(rs);
-//            }
-//        } catch (SQLException e) {
-//            throw new SQLException(e);
-//        }
-//    }
 
-    private Question rsQuestion(ResultSet rs) throws SQLException {
-        return new Question(rs.getLong("QuestionID"), rs.getString("Questions"));
-    }
-
-//    private Answer rsAnswer(ResultSet rs) throws SQLException {
-//        return new Answer(rs.getLong("AnswerID"), rs.getString("answer"));
-//    }
-
-//    public Answer getAnswer(long question_ID) throws SQLException {
-//        try (Connection conn = dataSource.getConnection();
-//             PreparedStatement ps = conn.prepareStatement("SELECT AnswerID, answer FROM [Answer] WHERE Question_ID = ?")) {
-//            ps.setLong(1, question_ID);
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (!rs.next()) throw new SQLException();
-//                else return rsAnswer(rs);
-//            }
-//        } catch (SQLException e) {
-//            throw new SQLException(e);
-//        }
-//    }
-=======
-            throw new SQLRepositoryException(e);
-        }
-    }
 
     private Choice rsChoice(ResultSet rs) throws SQLException {
         return new Choice(rs.getInt("Question_ID"), rs.getInt("ChoiceID"), rs.getString("Choices"), rs.getString("Desc"));
@@ -148,6 +106,10 @@ public class QuizRepository implements Repository {
         return new Answer(rs.getInt("AnswersID"), rs.getString("Answers"));
     }
 
+    private int rsQuestionID(ResultSet rs) throws SQLException{
+        return rs.getInt("QuestionID");
+    }
 
->>>>>>> upstream/master
+
+
 }
