@@ -7,9 +7,10 @@
 <body>
 <div>IndexPage</div>
 <li><a href="/questions">kolla frågor</a></li>
+<li><a href="/quizzes">kolla quizzes</a></li>
 <div></div>
-<form method="post" action="/putID">
-    What ID: <input type="text" name="quizID"/>
+<form method="post" action="/getQuiz">
+    What ID: <input type="text" name="quizID" placeholder="Skriv ett QuizID"/>
     <input type="submit"/>
 </form>
 </body>
