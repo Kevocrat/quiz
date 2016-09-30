@@ -10,12 +10,11 @@ public class Quiz {
     public int quizID;
     public String title;
     public String descr;
-    public Date createdDate;
 
-    public Quiz(int quizID, String title, String descr, Date createdDate){
+    public Quiz(int quizID, String title, String descr){
         this.quizID=quizID;
         this.title=title;
         this.descr=descr;
-        this.createdDate=createdDate;
+
     }
 }

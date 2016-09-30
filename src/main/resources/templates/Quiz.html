@@ -6,16 +6,20 @@
 </head>
 <body>
 <form action="result" method="post">
-<span th:text="${Question}"></span>
+
+<span th:text="${Question.question}"></span>
 
 <u1>
     <li th:each="choice : ${choices}">
 
-    <input type="radio" name="Coolio" th:value="1" th:text="${choice}"/>
-
+    <input type="radio" name="q1" th:value="${choice.choice}" th:text="${choice.descr}"/>
     </li>
 </u1>
 
- <input type="submit"/></form>
+<input type="submit" name="previous" value="Previous"/><input type="submit" name="toDB" value="submit"/><input type="submit" name="next" value="Next"/>
+<input type="hidden" name="qID" value="${qID}"/>
+    <input type="hidden" name="questionID" value="${Question.questionID}"/>
+</form>
+
 </body>
 </html>

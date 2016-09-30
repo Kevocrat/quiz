@@ -4,7 +4,6 @@ package se.quiz;
  * Created by Administrator on 2016-09-28.
  */
 public class Choice {
-    public int quiz_ID;
     public int question_ID;
     public int choiceID;
     public String choice;
