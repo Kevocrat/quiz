@@ -12,7 +12,7 @@ public class ResultLogic {
         int points = 0;
 
         for (Map.Entry<Integer, String> e: correctAnswers.entrySet()) {
-            if (e.getValue() == userAnswers.get(e.getKey())){
+            if (e.getValue().equals(userAnswers.get(e.getKey()))){
                 points ++;
             }
 

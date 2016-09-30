@@ -30,6 +30,7 @@ public class QuizController {
         if(session.isNew()){
             Quiz thisQuiz = quizRepository.getQuiz();
             questions = quizRepository.listQuestion(thisQuiz.quizID);
+            session.setAttribute("Quiz", thisQuiz);
             session.setAttribute("index", 0);
             session.setAttribute("Questions", questions);
             session.setAttribute("userAnswers", userAnswers);
@@ -83,15 +84,26 @@ public class QuizController {
 
     }
 
-//    @RequestMapping(params="toDB", path="result", method= RequestMethod.POST)
-//    public ModelAndView sendToDB() throws SQLException {
-//        for(Answer answer: quizRepository.listAnswer())
-//        logic(session.getAttribute("userAnswers", session.getAttribute))
+    @RequestMapping(params="toDB", path="result", method= RequestMethod.POST)
+    public ModelAndView sendToDB(HttpSession session, @RequestParam String q1, @RequestParam Integer qID) throws SQLException {
+        Quiz thisquiz = (Quiz)session.getAttribute("Quiz");
+        HashMap<Integer, String> userAnswers = (HashMap<Integer, String>)session.getAttribute("userAnswers");
+        userAnswers.put(qID, q1);
+        HashMap<Integer, String> correctAnswers= new HashMap<>();
+
+
+        for(Answer answer: quizRepository.listAnswer(thisquiz.quizID)) {
+            correctAnswers.put(answer.question_ID, answer.answer);
+        }
+
+        int points = ResultLogic.Result(userAnswers, correctAnswers);
+
 //        System.out.println("to DB");
-//
-//        return "redirect:/";
-//
-//    }
+
+        return new ModelAndView("/Results")
+                .addObject("score", points);
+
+    }
 
     //Visa quizfrågor
     @RequestMapping("/Quiz")
