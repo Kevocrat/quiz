@@ -23,30 +23,45 @@ public class QuizController {
     @Autowired
     private QuizRepository quizRepository;
 
-
     @RequestMapping("/")
-    public ModelAndView toQuiz() throws SQLException {
-       Quiz thisQuiz = quizRepository.getQuiz();
-        List<Integer> questionsInQuiz = quizRepository.listQuestionID(thisQuiz.quizID);
+    public ModelAndView toQuiz(HttpSession session) throws SQLException {
+        List<Question> questions;
+
+        if(session.isNew()){
+            Quiz thisQuiz = quizRepository.getQuiz();
+            questions = quizRepository.listQuestion(thisQuiz.quizID);
+            session.setAttribute("index", 0);
+            session.setAttribute("Questions", questions);
+        }
+        else {
+            questions  = (List <Question>)session.getAttribute("Questions");
+
+        }
+        List<Choice> choices = quizRepository.getChoicesForQuestion(questions.get((int)session.getAttribute("index")).questionID);
+
         return new ModelAndView("/Quiz")
-                .addObject("Question", quizRepository.getQuestion(questionsInQuiz.get(0)))
-                .addObject("choices", quizRepository.getChoicesForQuestion(questionsInQuiz.get(0)));
-
-
+                .addObject("Question", questions.get((int)session.getAttribute("index")))
+                .addObject("choices", choices);
     }
 
     @RequestMapping(params="previous", method= RequestMethod.POST)
-    public String previousQuestion() throws SQLException {
-        System.out.println("previous");
+    public String previousQuestion(HttpSession session) throws SQLException {
+        int index = (int)session.getAttribute("index");
+        index--;
+        session.setAttribute("index", index);
 
         return "redirect:/";
 
     }
 
     @RequestMapping(params="next", method= RequestMethod.POST)
-    public String nextQuestion() throws SQLException {
-        System.out.println("next");
+    public String nextQuestion(HttpSession session, @RequestParam String q1) throws SQLException {
+        session.setAttribute("answer" , q1);
 
+        int index = (int)session.getAttribute("index");
+        index++;
+
+        session.setAttribute("index", index);
         return "redirect:/";
 
     }
