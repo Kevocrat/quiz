@@ -16,9 +16,11 @@
     </li>
 </u1>
 
-<input type="submit" name="previous" value="Previous"/><input type="submit" name="toDB" value="submit"/><input type="submit" name="next" value="Next"/>
-<input type="hidden" name="qID" value="${qID}"/>
-    <input type="hidden" name="questionID" value="${Question.questionID}"/>
+    <input type="hidden" name="qID" th:value="${Question.questionID}"/>
+    <input type="submit" name="previous" value="Previous"/>
+    <input type="submit" name="toDB" value="submit"/>
+    <input type="submit" name="next" value="Next"/>
+
 </form>
 
 </body>

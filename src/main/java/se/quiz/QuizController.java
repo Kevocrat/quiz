@@ -10,8 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Administrator on 2016-09-28.
@@ -26,15 +25,18 @@ public class QuizController {
     @RequestMapping("/")
     public ModelAndView toQuiz(HttpSession session) throws SQLException {
         List<Question> questions;
+        Map<Integer, String> userAnswers = new HashMap<>();
 
         if(session.isNew()){
             Quiz thisQuiz = quizRepository.getQuiz();
             questions = quizRepository.listQuestion(thisQuiz.quizID);
             session.setAttribute("index", 0);
             session.setAttribute("Questions", questions);
+            session.setAttribute("userAnswers", userAnswers);
         }
         else {
             questions  = (List <Question>)session.getAttribute("Questions");
+            userAnswers = (Map<Integer, String>)session.getAttribute("userAnswers");
 
         }
         List<Choice> choices = quizRepository.getChoicesForQuestion(questions.get((int)session.getAttribute("index")).questionID);
@@ -42,37 +44,54 @@ public class QuizController {
         return new ModelAndView("/Quiz")
                 .addObject("Question", questions.get((int)session.getAttribute("index")))
                 .addObject("choices", choices);
+
     }
 
-    @RequestMapping(params="previous", method= RequestMethod.POST)
-    public String previousQuestion(HttpSession session) throws SQLException {
+    @RequestMapping(params="previous", path="result", method= RequestMethod.POST)
+    public String previousQuestion(HttpSession session, @RequestParam String q1, @RequestParam Integer qID) throws SQLException {
+
+        Map<Integer, String> userAnswers = (Map<Integer, String>)session.getAttribute("userAnswers");
+        userAnswers.put(qID, q1);
+        session.setAttribute("userAnswers", userAnswers);
+
+        List<Question> questions =(List<Question>) session.getAttribute("Questions");
         int index = (int)session.getAttribute("index");
-        index--;
-        session.setAttribute("index", index);
 
-        return "redirect:/";
+        if(index > 0) {
+            index--;
+            session.setAttribute("index", index);
+            return "redirect:/";
+        }else return "redirect:/";
 
     }
 
-    @RequestMapping(params="next", method= RequestMethod.POST)
-    public String nextQuestion(HttpSession session, @RequestParam String q1) throws SQLException {
-        session.setAttribute("answer" , q1);
+    @RequestMapping(params="next", path="result", method= RequestMethod.POST)
+    public String nextQuestion(HttpSession session, @RequestParam String q1, @RequestParam Integer qID) throws SQLException {
 
+        Map<Integer, String> userAnswers = (Map<Integer, String>)session.getAttribute("userAnswers");
+        userAnswers.put(qID, q1);
+        session.setAttribute("userAnswers", userAnswers);
+
+        List<Question> questions =(List<Question>) session.getAttribute("Questions");
         int index = (int)session.getAttribute("index");
-        index++;
 
-        session.setAttribute("index", index);
-        return "redirect:/";
-
-    }
-
-    @RequestMapping(params="toDB", method= RequestMethod.POST)
-    public String sendToDB() throws SQLException {
-        System.out.println("to DB");
-
-        return "redirect:/";
+        if(index < questions.size()-1) {
+            index++;
+            session.setAttribute("index", index);
+            return "redirect:/";
+        }else return "redirect:/";
 
     }
+
+//    @RequestMapping(params="toDB", path="result", method= RequestMethod.POST)
+//    public ModelAndView sendToDB() throws SQLException {
+//        for(Answer answer: quizRepository.listAnswer())
+//        logic(session.getAttribute("userAnswers", session.getAttribute))
+//        System.out.println("to DB");
+//
+//        return "redirect:/";
+//
+//    }
 
     //Visa quizfrågor
     @RequestMapping("/Quiz")

@@ -46,10 +46,10 @@ public class QuizRepository implements Repository {
 }
 
 
-    public List<Answer> listAnswer(long question_ID) throws SQLException {
+    public List<Answer> listAnswer(long quiz_ID) throws SQLException {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT AnswersID, Answers FROM [Ansvers] WHERE Question_ID = ?")) {
-            ps.setLong(1, question_ID);
+             PreparedStatement ps = conn.prepareStatement("SELECT Question_ID, Answers FROM [Ansvers] WHERE Quiz_ID = ?")) {
+            ps.setLong(1, quiz_ID);
             try (ResultSet rs = ps.executeQuery()) {
                 List<Answer> answers = new ArrayList<>();
                 while (rs.next()) answers.add(rsAnswer(rs));
@@ -93,7 +93,7 @@ public class QuizRepository implements Repository {
     }
 
     private Answer rsAnswer(ResultSet rs) throws SQLException {
-        return new Answer(rs.getInt("AnswersID"), rs.getString("Answers"));
+        return new Answer(rs.getInt("Question_ID"), rs.getString("Answers"));
     }
 
 //    private int rsQuestionID(ResultSet rs) throws SQLException{
